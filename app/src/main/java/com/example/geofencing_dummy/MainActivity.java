@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         textLat = (TextView) findViewById(R.id.lat);
         textLong = (TextView) findViewById(R.id.lon);
-
+        //startService(new Intent(getApplicationContext(),MyService.class));
         // initialize GoogleMaps
         initGMaps();
 
@@ -130,7 +130,10 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
             case R.id.movetonext: {
-                startActivity(new Intent(MainActivity.this, Timer.class));
+                Intent i = new Intent(MainActivity.this, Timer.class);
+                i.setAction(Intent.ACTION_MAIN);
+                i.addCategory(Intent.CATEGORY_HOME);
+                startActivity(i);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -347,7 +350,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final long GEO_DURATION = 60 * 60 * 1000;
     private static final String GEOFENCE_REQ_ID = "My Geofence";
-    private static final float GEOFENCE_RADIUS = 500.0f; // in meters
+    private static final float GEOFENCE_RADIUS = 1000.0f; // in meters
 
     // Create a Geofence
     private Geofence createGeofence( LatLng latLng, float radius ) {
@@ -415,8 +418,8 @@ public class MainActivity extends AppCompatActivity
 
         CircleOptions circleOptions = new CircleOptions()
                 .center( geoFenceMarker.getPosition())
-                .strokeColor(Color.argb(50, 70,70,70))
-                .fillColor( Color.argb(100, 150,150,150) )
+                .strokeColor(Color.argb(50, 255,0,0))
+                .fillColor( Color.argb(100, 250,128,114) )
                 .radius( GEOFENCE_RADIUS );
         geoFenceLimits = map.addCircle( circleOptions );
     }

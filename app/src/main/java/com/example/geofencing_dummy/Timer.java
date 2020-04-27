@@ -43,19 +43,19 @@ public class Timer extends AppCompatActivity implements GoogleApiClient.Connecti
     private TextView timer;
     private TextView loc;
     private CountDownTimer countDownTimer;
-    private long timeleftinMilli = 60000;
+    private long timeleftinMilli = 15000;
 
     private int check = 0;
     //    IGoogleService mGoogleMapServices;
     private static double distancek = 0.0;
     private Button rewards;
-    private int reward = 100;
+    private int reward = 0;
     TextView t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-
+        // startService(new Intent(getApplicationContext(),MyService.class));
 //        mGoogleMapServices = Common.getGoogleMapsAPI();
 
 
@@ -101,7 +101,7 @@ public class Timer extends AppCompatActivity implements GoogleApiClient.Connecti
 
             @Override
             public void onFinish() {
-                timeleftinMilli = 60000;
+                timeleftinMilli = 15000;
                 if(mLastLocation != null) {
                     double lat1 = LatLong.geo.latitude;
                     double lng1 = LatLong.geo.longitude;
@@ -110,11 +110,12 @@ public class Timer extends AppCompatActivity implements GoogleApiClient.Connecti
                     double distance = distance(lat1, lng1, lat2, lng2, "k");
                     if(distance < 1) {
                         reward += 10;
-                        loc.setText("You were within the geofence when last updated");
+                        loc.setText("You were within the geofence when last updated. Reward is "+ reward);
                     }
                     else {
-                        reward -= 10;
-                        loc.setText("You were outside the geofence when last updated");
+                        if(reward != 0)
+                            reward -= 10;
+                        loc.setText("You were outside the geofence when last updated. Reward is "+ reward);
                     }
                     Reward_Container.reward = reward;
                     System.out.println(reward);
