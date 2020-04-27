@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         textLat = (TextView) findViewById(R.id.lat);
         textLong = (TextView) findViewById(R.id.lon);
-        //startService(new Intent(getApplicationContext(),MyService.class));
         // initialize GoogleMaps
         initGMaps();
 
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        // Call GoogleApiClient connection when starting the Activity
         googleApiClient.connect();
     }
 
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
 
-        // Disconnect GoogleApiClient when stopping Activity
         googleApiClient.disconnect();
     }
 
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
     private final int REQ_PERMISSION = 999;
 
-    // Check for permission to access Location
+
     private boolean checkPermission() {
         Log.d(TAG, "checkPermission()");
         // Ask for permission if it wasn't granted yet
@@ -149,7 +146,6 @@ public class MainActivity extends AppCompatActivity
                 == PackageManager.PERMISSION_GRANTED );
     }
 
-    // Asks for permission
     private void askPermission() {
         Log.d(TAG, "askPermission()");
         ActivityCompat.requestPermissions(
@@ -159,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
-    // Verify user's response of the permission requested
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult()");
@@ -180,13 +176,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // App cannot work without the permissions
     private void permissionsDenied() {
         Log.w(TAG, "permissionsDenied()");
         // TODO close app and warn user
     }
 
-    // Initialize GoogleMaps
     private void initGMaps(){
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -214,12 +208,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private LocationRequest locationRequest;
-    // Defined in mili seconds.
-    // This number in extremely low, and should be used only for debug
+
     private final int UPDATE_INTERVAL =  1000;
     private final int FASTEST_INTERVAL = 900;
 
-    // Start location Updates
+
     private void startLocationUpdates(){
         Log.i(TAG, "startLocationUpdates()");
         locationRequest = LocationRequest.create()
@@ -238,7 +231,7 @@ public class MainActivity extends AppCompatActivity
         writeActualLocation(location);
     }
 
-    // GoogleApiClient.ConnectionCallbacks connected
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "onConnected()");
@@ -246,19 +239,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    // GoogleApiClient.ConnectionCallbacks suspended
+
     @Override
     public void onConnectionSuspended(int i) {
         Log.w(TAG, "onConnectionSuspended()");
     }
 
-    // GoogleApiClient.OnConnectionFailedListener fail
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
     }
 
-    // Get last known location
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation()");
         if ( checkPermission() ) {
@@ -340,10 +332,6 @@ public class MainActivity extends AppCompatActivity
             GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
             addGeofence( geofenceRequest );
         } else {
-//            geoFenceMarker = locationMarker;
-//            Geofence geofence = createGeofence( geoFenceMarker.getPosition(), GEOFENCE_RADIUS );
-//            GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
-//            addGeofence( geofenceRequest );
             Log.e(TAG, "Geofence marker is null");
         }
     }
@@ -352,8 +340,7 @@ public class MainActivity extends AppCompatActivity
     private static final String GEOFENCE_REQ_ID = "My Geofence";
     private static final float GEOFENCE_RADIUS = 100.0f; // in meters
 
-    // Create a Geofence
-    private Geofence createGeofence( LatLng latLng, float radius ) {
+    private Geofence createGeofence(LatLng latLng, float radius) {
         LatLong.geo = latLng;
         Log.d(TAG, "createGeofence");
         return new Geofence.Builder()
@@ -365,7 +352,6 @@ public class MainActivity extends AppCompatActivity
                 .build();
     }
 
-    // Create a Geofence Request
     private GeofencingRequest createGeofenceRequest( Geofence geofence ) {
         Log.d(TAG, "createGeofenceRequest");
         return new GeofencingRequest.Builder()
@@ -386,7 +372,6 @@ public class MainActivity extends AppCompatActivity
                 this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT );
     }
 
-    // Add the created GeofenceRequest to the device's monitoring list
     private void addGeofence(GeofencingRequest request) {
         Log.d(TAG, "addGeofence");
         if (checkPermission())
@@ -400,11 +385,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResult(@NonNull Status status) {
         Log.i(TAG, "onResult: " + status);
-        if ( status.isSuccess() ) {
+        if (status.isSuccess()) {
             saveGeofence();
             drawGeofence();
         } else {
-            // inform about fail
         }
     }
 
@@ -413,7 +397,7 @@ public class MainActivity extends AppCompatActivity
     private void drawGeofence() {
         Log.d(TAG, "drawGeofence()");
 
-        if ( geoFenceLimits != null )
+        if (geoFenceLimits != null)
             geoFenceLimits.remove();
 
         CircleOptions circleOptions = new CircleOptions()
@@ -438,21 +422,7 @@ public class MainActivity extends AppCompatActivity
         editor.apply();
     }
 
-    // Recovering last Geofence marker
-//    private void recoverGeofenceMarker() {
-//        Log.d(TAG, "recoverGeofenceMarker");
-//        SharedPreferences sharedPref = getPreferences( Context.MODE_PRIVATE );
-//
-//        if ( sharedPref.contains( KEY_GEOFENCE_LAT ) && sharedPref.contains( KEY_GEOFENCE_LON )) {
-//            double lat = Double.longBitsToDouble( sharedPref.getLong( KEY_GEOFENCE_LAT, -1 ));
-//            double lon = Double.longBitsToDouble( sharedPref.getLong( KEY_GEOFENCE_LON, -1 ));
-//            LatLng latLng = new LatLng( lat, lon );
-//            markerForGeofence(latLng);
-//            drawGeofence();
-//        }
-//    }
 
-    // Clear Geofence
     private void clearGeofence() {
         Log.d(TAG, "clearGeofence()");
         LocationServices.GeofencingApi.removeGeofences(
@@ -471,9 +441,9 @@ public class MainActivity extends AppCompatActivity
 
     private void removeGeofenceDraw() {
         Log.d(TAG, "removeGeofenceDraw()");
-        if ( geoFenceMarker != null)
+        if (geoFenceMarker != null)
             geoFenceMarker.remove();
-        if ( geoFenceLimits != null )
+        if (geoFenceLimits != null)
             geoFenceLimits.remove();
     }
 
