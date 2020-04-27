@@ -12,14 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Reward"></activity>
+        <service
+            android:name=".GeofenceTransitionService"
+            android:exported="false"></service>
+
+        <activity android:name=".Reward" />
         <activity android:name=".Timer" />
+
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:exported="true">
-
-        </service>
+            android:exported="true"></service>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -27,7 +30,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
 
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -43,7 +43,7 @@ public class Timer extends AppCompatActivity implements GoogleApiClient.Connecti
     private TextView timer;
     private TextView loc;
     private CountDownTimer countDownTimer;
-    private long timeleftinMilli = 15000;
+    private long timeleftinMilli = 600000;
 
     private int check = 0;
     //    IGoogleService mGoogleMapServices;
@@ -101,14 +101,14 @@ public class Timer extends AppCompatActivity implements GoogleApiClient.Connecti
 
             @Override
             public void onFinish() {
-                timeleftinMilli = 15000;
+                timeleftinMilli = 600000;
                 if(mLastLocation != null) {
                     double lat1 = LatLong.geo.latitude;
                     double lng1 = LatLong.geo.longitude;
                     double lat2 = mLastLocation.getLatitude();
                     double lng2 = mLastLocation.getLongitude();
                     double distance = distance(lat1, lng1, lat2, lng2, "k");
-                    if(distance < 1) {
+                    if(distance < 0.1) {
                         reward += 10;
                         loc.setText("You were within the geofence when last updated. Reward is "+ reward);
                     }
